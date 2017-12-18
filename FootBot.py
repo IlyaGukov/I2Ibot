@@ -35,6 +35,8 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
+Counter = 0
+
 LANGUAGE, THANKS = range(2)
 QUESTION = range(1)
 
@@ -42,7 +44,8 @@ list_of_answerer = ListOfAnswerers()
 list_of_requests = ListOfRequests()
 
 temp = [1,2] #это заглушка
-users = [] #этотоже
+users_guest = [] #этотоже
+users_local = []
 
 # def getTranslation(text):
 #     params = {
@@ -113,17 +116,31 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
+def send_advert(bot):
+    answer = '*ADVERTISMENT:*\n'\
+    'Come to I2I, realize your ideas'
+    for user in users_local:
+        bot.send_message(chat_id=user.get_chat_id, text = answer, parse_mode = 'Markdown')
+        bot.send_photo(chat_id=user.get_chat_id, photo = open('advert.jpg', 'rb'))
+    for user in users_local:
+        bot.send_message(chat_id=user.get_chat_id, text = answer, parse_mode = 'Markdown')
+        bot.send_photo(chat_id=user.get_chat_id, photo = open('advert.jpg', 'rb'))
+
 def create_request(bot, update):
+    Counter += 1
+    if ((counter // 5) == 0):
+        send_advert(bot)
+
     req = Request(bot, update.message.chat_id, update.message.text)
     list_of_requests.add_request(update.message.chat_id, req)
-    arr_of_asked = req.ask_dodiks(NUMBER_OF_DODIKS_TO_ASK, users) #todo: import array_of_all
+    arr_of_asked = req.ask_dodiks(NUMBER_OF_DODIKS_TO_ASK, users_local) #todo: import array_of_all
     for asked in arr_of_asked:
         list_of_answerer.add_to_answerer(answerer_id = asked.get_chat_id(), who_ask = update.message.chat_id)
 
     return ConversationHandler.END
 
 def registration(bot, update):
-    reply_keyboard = [['Guest', 'Local']]
+    reply_keyboard = [['Guest', 'Russian_local']]
 
     update.message.reply_text(
         'Hi! Are you FWC guest or local?',
@@ -132,25 +149,35 @@ def registration(bot, update):
 
 
 def languages(bot, update):
-    reply_keyboard = [['English', 'Russian', 'Spanish']]
+    reply_keyboard = [['English', 'Spanish']]
 
     temp[0] = update.message.text #это заглушка
-    update.message.reply_text(
-        'Which language are you speak?',
-        reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    if (temp[0] == 'Guest'):
+        update.message.reply_text(
+            'Which language do you speak?',
+            reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    elif(temp[0] == 'Russian_local'):
+        update.message.reply_text(
+            'Which language do you know additionaly to russian?',
+            reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+
     return THANKS
 
 
 def thanks(bot, update):
-    users.append(User(temp[0], update.message.text, update.message.chat_id))
+    if (temp[0] == 'Guest'):
+        users_guest.append(User(temp[0], update.message.text, update.message.chat_id))
+        update.message.reply_text('Thanks, now you can ask locals with /ask command')
 
-    update.message.reply_text('Thanks, now you can ask locals with /ask command')
+    else:
+        users_local.append(User(temp[0], update.message.text, update.message.chat_id))
+        update.message.reply_text('wait, guests will come soon!')
+
     return ConversationHandler.END
 
 
 def question(bot, update):
-    update.message.reply_text('Now you can ask')
-
+    update.message.reply_text('Now, ask question in one message please')
     return QUESTION
 
 
@@ -175,7 +202,6 @@ def main():
     # Create the EventHandler and pass it your bot's token.
     token = '500529687:AAGE46fRiNB0JFveF_F6hphlrgsno6RGqto'
     updater = Updater(token)
-
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
@@ -190,9 +216,9 @@ def main():
         entry_points=[CommandHandler('register', registration)],
 
         states={
-            LANGUAGE: [RegexHandler('^(Guest|Local)$', languages)],
+            LANGUAGE: [RegexHandler('^(Guest|Russian_local)$', languages)],
 
-            THANKS: [RegexHandler('^(English|Russian|Spanish)$', thanks)]
+            THANKS: [RegexHandler('^(English|Spanish)$', thanks)]
         },
 
         fallbacks=[CommandHandler('cancel', cancel)]
