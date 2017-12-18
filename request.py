@@ -1,7 +1,7 @@
 import random
 class Request:
 	
-	def __init__(self,bot, asker, question,):
+	def __init__(self,bot, asker, question):
 		self.churka = asker
       	self.question = question
 		self.bot = bot
