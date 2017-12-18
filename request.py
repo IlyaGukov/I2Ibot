@@ -11,6 +11,7 @@ class Request:
 		list_of_dodiks = random.sample(dodik_array,number_of_dodiks)
 		for dod in ask_dodiks:
 			bot.send_message(chat_id=dod.get_chat_id, text = question)
+		return list_of_dodiks
 	
 	def add_answer(user,text):
 		answers[user] = text
