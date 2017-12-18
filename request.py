@@ -2,7 +2,7 @@ import random
 class Request:
 	
 	def __init__(self,bot, asker, question,):
-		self.churka = asker.get_chat_id
+		self.churka = asker
       	self.question = question
 		self.bot = bot
 		self.answers = {}
