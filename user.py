@@ -1,15 +1,14 @@
 
 class User:
 
-	def __init__(self, nationality, language, update):
+	def __init__(self, nationality, language, chat_id):
 		self.nationality = nationality
-      	self.language = language
+		self.language = language
 		self.score = 0
-		self.chat_id = update.message.chat_id
+		self.chat_id = chat_id
 	
-   
 	def reward(self,rew):
-     		self.score += rew
+		self.score += rew
 	
 	def get_language(self):
 		return self.language
