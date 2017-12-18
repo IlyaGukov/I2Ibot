@@ -7,15 +7,15 @@ class Request:
 		self.bot = bot
 		self.answers = {}
 	
-	def ask_dodiks(number_of_dodiks,dodik_array):
+	def ask_dodiks(self,number_of_dodiks,dodik_array):
 		list_of_dodiks = random.sample(dodik_array,number_of_dodiks)
 		for dod in ask_dodiks:
-			bot.send_message(chat_id=dod.get_chat_id, text = question)
+			self.bot.send_message(chat_id=dod.get_chat_id, text = question)
 		return list_of_dodiks
 	
-	def add_answer(user,text):
-		answers[user] = text
+	def add_answer(self,user,text):
+		self.answers[user] = text
 		
-	def send_answers():
+	def send_answers(self):
 		for k in self.answers.keys():
-			bot.send_message(chat_id = self.churka, text = answers[k])
+			self.bot.send_message(chat_id = self.churka, text = answers[k])
