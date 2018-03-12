@@ -1,11 +1,16 @@
 import threading
 import queue
+from ConversationThread import Conversation
 
 # todo
 conversation_object = 0
 conversaions = {'asker_chat_id', conversation_object}
 
-def process_conversation(message_chat_id_, message_text_):
+def process_conversation(message_chat_id_, message):
+	converstion = Conversation(message, message_chat_id)
+	conversation[message_chat_id] = conversation
+	conversation.main()
+
     # todo
 
 def process_registration(message_chat_id_, message_text_):
@@ -37,3 +42,5 @@ def slow_message_processing(askers_lock, askers,
                     proccess_registration(message_chat_id, message_text)
             finally:
                 registrators_lock.release()
+
+        

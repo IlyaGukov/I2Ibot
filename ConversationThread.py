@@ -3,7 +3,7 @@ from Oracle import Oracle
 class Conversation:
 	oracle = Oracle()
 	
-	def __init__(self, bot, question, asker_id):
+	def __init__(self, question, asker_id):
 		self.bot = bot
 		self.question = question
 		self.asker_id = asker_id
