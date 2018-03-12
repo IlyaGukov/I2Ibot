@@ -40,7 +40,7 @@ def _message_handler(bot, update):
 
 
 def main():
-    token = '500529687:AAGE46fRiNB0JFveF_F6hphlrgsno6RGqto'
+    token = ''
     updater = Updater(token)
     dp = updater.dispatcher
 

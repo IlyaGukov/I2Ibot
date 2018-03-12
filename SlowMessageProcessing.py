@@ -37,5 +37,3 @@ def slow_message_processing(askers_lock, askers,
                     proccess_registration(message_chat_id, message_text)
             finally:
                 registrators_lock.release()
-
-        
