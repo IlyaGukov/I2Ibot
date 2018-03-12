@@ -1,7 +1,12 @@
 class Message:
-	def __init__(self, user_id, text, subject, language, question_flag):
-		self.user_id = user_id
+	def __init__(self, chat_id, text, subject, language):
+		self.chat_id = chat_id
 		self.text = text
 		self.subject = subject
 		self.language = language
-		self.question_flag = question_flag
+	
+	def get_chat_id(self):
+		return self.chat_id
+		
+	
+

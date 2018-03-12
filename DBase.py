@@ -11,7 +11,8 @@ class UserDataBase:
 	def change_occupation(self,chat_id):
 		self.data[chat_id]['Occupied'] = not self.data[chat_id]['Occupied']
 			
-	def delete_user(self,user_id)
+	def delete_user(self,chat_id)
+		self.data.pop(chat_id)
 	
 	
 class One_to_one:
@@ -20,10 +21,10 @@ class One_to_one:
 	def __init__(self, lock):					
 			self.data = {}
 		
-	def write(self, asker, list_of_dodiks):
+	def write(self, asker_id, list_of_dodiks):
 		with lock:
 			for dod in list_of_dodiks:
-				self.data[dod.get_chat_id()] = asker.get_chat_id()
+				self.data[dod.get_chat_id()] = asker_id
 			
 	def search_and_pop(self,dodik_id):
 		lock.acquire()
