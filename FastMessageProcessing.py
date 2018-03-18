@@ -1,5 +1,6 @@
 from telegram.ext import Updater, CommandHandler, ConversationHandler, MessageHandler, Filters
 from telegram.ext.dispatcher import run_async
+from telegram import ReplyKeyboardMarkup
 from UserTable import UserTable
 from DBase import One_to_one
 from SlowMessageProcessing import slow_message_processing
@@ -43,9 +44,11 @@ def _question(bot, update):
         logger.info("User %d added to askers_table", update.message.chat_id)
         askers_table.add_user(update.message.chat_id)
 
-# @run_async
+@run_async
 def _registration(bot, update):
     logger.info("User %d added to registrators_table", update.message.chat_id)
+    #ToDo probably speaking to all registrators should be in separate thread
+    update.message.reply_text('What is your name?')
     registrators_table.add_user(update.message.chat_id)
 
 # @run_async
@@ -61,7 +64,7 @@ def main():
     updater = Updater(token)
     dp = updater.dispatcher
 
-    slow_message_processing(askers_table, registrators_table, messages_queue)
+    slow_message_processing(dp.bot, askers_table, registrators_table, messages_queue)
 
     help_handler = CommandHandler('start', _help)
     dp.add_handler(help_handler, group = 1)
