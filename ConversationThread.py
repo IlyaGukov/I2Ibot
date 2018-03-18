@@ -1,8 +1,8 @@
 from Oracle import Oracle
 
 class Conversation:
-    oracle = Oracle()
     
+    # ToDo: add oracle as initialization param here
     def __init__(self, question, asker_id):
         self.question = question
         self.asker_id = asker_id

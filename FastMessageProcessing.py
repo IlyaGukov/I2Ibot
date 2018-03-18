@@ -1,4 +1,4 @@
-from telegram.ext import Updater, CommandHandler, ConversationHandler, Filters
+from telegram.ext import Updater, CommandHandler, ConversationHandler, MessageHandler, Filters
 from telegram.ext.dispatcher import run_async
 from UserTable import UserTable
 from DBase import One_to_one
@@ -57,7 +57,7 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 def main():
-    token = ''
+    token = '510382393:AAH8mCRLx3tknEH9fhJp-dMlk6UOPFmTgQI'
     updater = Updater(token)
     dp = updater.dispatcher
 
@@ -75,7 +75,7 @@ def main():
     question_handler = CommandHandler('ask', _question)
     dp.add_handler(registration_handler, group = 0)
 
-    message_handler = CommandHandler(Filters.text, _message_handler)
+    message_handler = MessageHandler(Filters.text, _message_handler)
     dp.add_handler(message_handler, group = 0)
 
 

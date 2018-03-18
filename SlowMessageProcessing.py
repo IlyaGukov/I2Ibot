@@ -3,6 +3,7 @@ import logging
 import queue
 from DBase import UserDataBase, One_to_one
 from ConversationThread import Conversation
+from telegram.ext.dispatcher import run_async
 
 logging.basicConfig(format='SMP(%(asctime)s - %(name)s - %(levelname)s - %(message)s):',
                     level=logging.INFO)

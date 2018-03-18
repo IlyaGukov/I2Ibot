@@ -15,7 +15,7 @@ class UserDataBase:
     def change_occupation(self, chat_id):
         self.data[chat_id]['Occupied'] = not self.data[chat_id]['Occupied']
             
-    def delete_user(self, chat_id)
+    def delete_user(self, chat_id):
         self.data.pop(chat_id)
     
     
@@ -23,9 +23,9 @@ class One_to_one:
     '''
     thread safe
     '''
-    def __init__(self, lock_):
-            self.data = dect()
-            self.lock = lock_
+    def __init__(self):
+            self.data = dict()
+            self.lock = threading.Lock()
         
     def write(self, asker_id, list_of_dodiks):
         with self.lock:
