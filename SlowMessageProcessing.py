@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 @run_async
-def slow_message_processing(bot, askers_table, registrators_table, messages_queue, user_data_base):
+def slow_message_processing(bot, askers_table, registrators_table, messages_queue):
 
     # probably not good idea
     LANGUAGES = frozenset(['English', 'Russian'])
