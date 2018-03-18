@@ -57,11 +57,14 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 def main():
-    token = '510382393:AAH8mCRLx3tknEH9fhJp-dMlk6UOPFmTgQI'
+    token = ''
     updater = Updater(token)
     dp = updater.dispatcher
 
     slow_message_processing(askers_table, registrators_table, messages_queue)
+
+    help_handler = CommandHandler('start', _help)
+    dp.add_handler(help_handler, group = 1)
 
     help_handler = CommandHandler('help', _help)
     dp.add_handler(help_handler, group = 1)
