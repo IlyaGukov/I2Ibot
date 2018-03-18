@@ -6,8 +6,8 @@ class UserDataBase:
         self.data = dict()
     
     #ToDo make it async
-    def add_user(self, chat_id):
-        self.data[chat_id] = {'User':chat_id, 'Occupied':False, 'Language': set(), 'Themes': set()}
+    def add_user(self, chat_id, user_name):
+        self.data[chat_id] = {'User':user_name, 'Occupied':False, 'Languages': set(), 'Themes': set()}
     
     def write_user_data(self, chat_id, data_field, user_data):
         self.data[chat_id][data_field].add(user_data)

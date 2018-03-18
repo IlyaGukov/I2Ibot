@@ -1,6 +1,7 @@
+from telegram.ext.dispatcher import run_async
 import queue
 import numpy as np
-    
+
 class Oracle:
 
     def __init__(self, user_db, one_to_one):
@@ -8,6 +9,7 @@ class Oracle:
         self.release_queue = queue.Queue()
         self.user_db = user_db
         self.one_to_one = one_to_one
+        self.serve_question_queue()
         
     def push_to_queue(self, question):
         self.question_queue.put(question)
@@ -31,7 +33,8 @@ class Oracle:
         
     def serve_questions(self, question):
         self.send(find_dodiks, question)
-        
+
+    @run_async
     def serve_question_queue(self):
         while True:
             q  = self.question_queue.get()
@@ -39,4 +42,5 @@ class Oracle:
             if q is None:
                 continue
             self.serve_questions(q)
+            # don't sure if task_done needed?
             self.question_queue.task_done()

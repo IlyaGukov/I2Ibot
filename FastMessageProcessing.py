@@ -9,7 +9,7 @@ import logging
 import queue
 
 # Enable logging
-logging.basicConfig(format='FMP(%(asctime)s - %(name)s - %(levelname)s - %(message)s):',
+logging.basicConfig(format='SMP:    %(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -35,21 +35,22 @@ def _send_error(message_chat_id_, error_message):
     bot.send_message(chat_id=message_chat_id_, text = error_message, parse_mode = 'Markdown')
 
 # на question и регистрейшн асинк может и не нужен
-# @run_async
-def _question(bot, update):
+@run_async
+def _question_asked(bot, update):
     if registrators_table.user_in_table(update.message.chat_id):
         _send_error(update.message.chat_id,
             'please end registration/profile_data_correction process before asking questions')
     else:
         logger.info("User %d added to askers_table", update.message.chat_id)
         askers_table.add_user(update.message.chat_id)
+        update.message.reply_text('Now, ask question in one message please')
 
 @run_async
 def _registration(bot, update):
     logger.info("User %d added to registrators_table", update.message.chat_id)
     #ToDo probably speaking to all registrators should be in separate thread
-    update.message.reply_text('What is your name?')
     registrators_table.add_user(update.message.chat_id)
+    update.message.reply_text('What is your name?')
 
 # @run_async
 def _message_handler(bot, update):
@@ -78,8 +79,8 @@ def main():
     registration_handler = CommandHandler('edit_profile', _registration)
     dp.add_handler(registration_handler, group = 1)
 
-    question_handler = CommandHandler('ask', _question)
-    dp.add_handler(registration_handler, group = 0)
+    question_handler = CommandHandler('ask', _question_asked)
+    dp.add_handler(question_handler, group = 0)
 
     message_handler = MessageHandler(Filters.text, _message_handler)
     dp.add_handler(message_handler, group = 0)
