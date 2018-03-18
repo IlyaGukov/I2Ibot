@@ -1,6 +1,8 @@
 from telegram.ext import Updater, CommandHandler, ConversationHandler, Filters
 from telegram.ext.dispatcher import run_async
 from UserTable import UserTable
+from DBase import One_to_one
+from SlowMessageProcessing import slow_message_processing
 import threading
 import logging
 import queue
@@ -58,6 +60,8 @@ def main():
     token = ''
     updater = Updater(token)
     dp = updater.dispatcher
+
+    slow_message_processing(askers_table, registrators_table, messages_queue)
 
     help_handler = CommandHandler('help', _help)
     dp.add_handler(help_handler, group = 1)
