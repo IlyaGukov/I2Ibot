@@ -4,20 +4,25 @@ import threading
 class UserDataBase:
     def __init__(self):
         self.data = dict()
-        
-    def write_user(self, user):
-        self.data[chat_id] = {'User':user,'Occupied':False}
-        
-    def change_occupation(self,chat_id):
+    
+    #ToDo make it async
+    def add_user(self, chat_id):
+        self.data[chat_id] = {'User':user, 'Occupied':False, 'Language': set(), 'Themes': set()}
+    
+    def write_user_data(self, chat_id, data_field, user_data):
+        self.data[chat_id][data_field].add(user_data)
+
+    def change_occupation(self, chat_id):
         self.data[chat_id]['Occupied'] = not self.data[chat_id]['Occupied']
             
-    def delete_user(self,chat_id)
+    def delete_user(self, chat_id)
         self.data.pop(chat_id)
     
     
 class One_to_one:
-    #thread safe
-
+    '''
+    thread safe
+    '''
     def __init__(self, lock_):
             self.data = dect()
             self.lock = lock_

@@ -2,18 +2,21 @@ import threading
 import queue
 from ConversationThread import Conversation
 
+LANGUAGES = frozenset(['English', 'Russian'])
+THEMES = frozenset(['Physics', 'IT'])
 conversaions = dict()
 
 def process_conversation(message_chat_id_, message):
-	converstion = Conversation(message, message_chat_id)
-	conversations[message_chat_id] = conversation
-	conversation.main()
-
-    # todo
+        # todo
+    converstion = Conversation(message, message_chat_id)
+    conversations[message_chat_id] = conversation
+    conversation.main()
 
 def process_registration(message_chat_id_, message_text_):
-    
-    # todo
+    if message_text_ in LANGUAGES:
+        user_data_base.write_user_data(message_chat_id_, 'Languages', message_text_)
+    elif message_text_ in THEMES:
+        user_data_base.write_user_data(message_chat_id_, 'Themes', message_text_)
 
 @run_async
 def slow_message_processing(askers_table, registrators_table,
@@ -29,4 +32,3 @@ def slow_message_processing(askers_table, registrators_table,
 
         elif registrators_table.user_in_table(message_chat_id):
             process_registration(message_chat_id, message_text)
-
