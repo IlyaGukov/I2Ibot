@@ -7,7 +7,7 @@ class UserTable:
 
     def user_in_table(self, chat_id_):
         with self.table_lock:
-            fl = chat_id_ in table
+            fl = chat_id_ in self.table
         return fl
 
     def add_user(self, chat_id_):
