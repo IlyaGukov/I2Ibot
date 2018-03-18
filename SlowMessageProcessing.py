@@ -14,7 +14,7 @@ conversaions = dict()
 def process_conversation(message_chat_id_, message, new_conversation):
         # todo
     if new_conversation:
-        logger.info("Conversation with question '%s' started by chat_id: ", message)    #todo add chat_id to logger
+        logger.info("Conversation with question '%s' started by chat_id: '%d'", message, message_chat_id_)
         converstion = Conversation(message, message_chat_id)
         conversations[message_chat_id] = conversation
         conversation.main()
