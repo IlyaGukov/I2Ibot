@@ -6,8 +6,6 @@ import queue
 from DBase import UserDataBase, One_to_one
 from ConversationThread import Conversation
 from Oracle import Oracle
-from langdetect import detect_langs
-from pycountry import languages
 from Question import Question
 
 logging.basicConfig(format='SMP:    %(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -15,6 +13,7 @@ logging.basicConfig(format='SMP:    %(asctime)s - %(name)s - %(levelname)s - %(m
 logger = logging.getLogger(__name__)
 
 
+#ToDo make all bot.send_message asynchronous
 @run_async
 def slow_message_processing(bot, askers_table, registrators_table, messages_queue):
 
@@ -23,8 +22,22 @@ def slow_message_processing(bot, askers_table, registrators_table, messages_queu
     THEMES = frozenset(['Physics', 'IT'])
     user_data_base = UserDataBase()
     one_to_one = One_to_one()
-    oracle = Oracle(user_data_base, one_to_one)
+    oracle = Oracle(bot, user_data_base, one_to_one)
     conversations = dict()
+
+    def _form_registration_data_message(user_id_):
+        answer = "Your registration data is:\n"
+        answer += "`Name: " + user_data_base.get_user(user_id_)['Name'] + "`\n"
+        answer += "`Languages: "
+        for language in user_data_base.get_user(user_id_)['Languages']:
+            answer += language + ", "
+        answer = answer[:-2] + "`\n"
+        answer += "`Themes: "
+        for theme in user_data_base.get_user(user_id_)['Themes']:
+            answer += theme + ", "
+        answer = answer[:-2] + "`"
+        
+        return answer
 
     def _process_conversation(message_chat_id_, message, new_conversation):
         if new_conversation:
@@ -41,10 +54,21 @@ def slow_message_processing(bot, askers_table, registrators_table, messages_queu
             user_data_base.write_user_data(message_chat_id_, 'Languages', message_text_)
             bot.send_message(chat_id = message_chat_id_,
                 text = 'Which topics do you know?',
-                reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+                reply_markup = ReplyKeyboardMarkup(
+                    reply_keyboard,
+                    one_time_keyboard = True,
+                    resize_keyboard = True))
 
         elif message_text_ in THEMES:
+            reply_keyboard = [['/ask', '/help', '/edit_profile']]
             user_data_base.write_user_data(message_chat_id_, 'Themes', message_text_)
+            bot.send_message(chat_id = message_chat_id_,
+                text = _form_registration_data_message(message_chat_id_),
+                parse_mode = 'Markdown',
+                reply_markup = ReplyKeyboardMarkup(
+                    reply_keyboard,
+                    one_time_keyboard = True,
+                    resize_keyboard = True))
             logger.info("User %d removed from registrators_table", message_chat_id_)
             registrators_table.remove_user(message_chat_id_)
 
@@ -53,7 +77,10 @@ def slow_message_processing(bot, askers_table, registrators_table, messages_queu
             user_data_base.add_user(message_chat_id_, message_text_)
             bot.send_message(chat_id = message_chat_id_,
                 text = 'Which languages do you know?',
-                reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+                reply_markup = ReplyKeyboardMarkup(
+                    reply_keyboard,
+                    one_time_keyboard = True,
+                    resize_keyboard = True))
 
     while True:
         message_chat_id, message_text = messages_queue.get()

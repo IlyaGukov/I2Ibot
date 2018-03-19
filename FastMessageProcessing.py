@@ -32,7 +32,7 @@ def _help(bot, update):
 
 @run_async
 def _send_error(message_chat_id_, error_message):
-    bot.send_message(chat_id=message_chat_id_, text = error_message, parse_mode = 'Markdown')
+    bot.send_message(chat_id = message_chat_id_, text = error_message, parse_mode = 'Markdown')
 
 # на question и регистрейшн асинк может и не нужен
 @run_async
@@ -62,7 +62,7 @@ def error(bot, update, error):
 
 def main():
     token = ''
-    updater = Updater(token)
+    updater = Updater(token, workers=64)
     dp = updater.dispatcher
 
     slow_message_processing(dp.bot, askers_table, registrators_table, messages_queue)

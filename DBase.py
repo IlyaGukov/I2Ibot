@@ -7,8 +7,14 @@ class UserDataBase:
     
     #ToDo make it async
     def add_user(self, chat_id, user_name):
-        self.data[chat_id] = {'User':user_name, 'Occupied':False, 'Languages': set(), 'Themes': set()}
-    
+        self.data[chat_id] = {'Name':user_name, 'Occupied':False, 'Languages': set(), 'Themes': set()}
+
+    def get_user(self, chat_id):
+        return self.data[chat_id]
+
+    def get_all_user_ids(self):
+        return self.data.keys()
+
     def write_user_data(self, chat_id, data_field, user_data):
         self.data[chat_id][data_field].add(user_data)
 
@@ -30,7 +36,7 @@ class One_to_one:
     def write(self, asker_id, list_of_dodiks):
         with self.lock:
             for dod in list_of_dodiks:
-                self.data[dod.get_chat_id()] = asker_id
+                self.data[dod] = asker_id
             
     def search_and_pop(self, dodik_id):
         with self.lock:
