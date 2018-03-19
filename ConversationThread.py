@@ -1,10 +1,10 @@
 class Conversation:
     
     # ToDo: add oracle as initialization param here
-    def __init__(self, question, asker_id, oracle_):
+    def __init__(self, question, oracle_):
         self.oracle = oracle_
         self.question = question
-        self.asker_id = asker_id
+        self.asker_id = question.asker_id
         self.answer = {}
         
     def main(self):
