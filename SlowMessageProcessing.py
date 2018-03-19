@@ -6,6 +6,9 @@ import queue
 from DBase import UserDataBase, One_to_one
 from ConversationThread import Conversation
 from Oracle import Oracle
+from langdetect import detect_langs
+from pycountry import languages
+from Question import Question
 
 logging.basicConfig(format='SMP:    %(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -24,10 +27,9 @@ def slow_message_processing(bot, askers_table, registrators_table, messages_queu
     conversations = dict()
 
     def _process_conversation(message_chat_id_, message, new_conversation):
-            # todo
         if new_conversation:
             logger.info("Conversation with question '%s' started by chat_id: '%d'", message, message_chat_id_)
-            conversation = Conversation(message, message_chat_id, oracle)
+            conversation = Conversation(Question(message_chat_id, message), oracle)
             conversations[message_chat_id] = conversation
             conversation.main()
         else:
